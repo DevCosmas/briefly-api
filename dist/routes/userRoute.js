@@ -14,6 +14,6 @@ userRouter.patch('/reset_Password/:Token', authConroller_1.isAuthenticated, user
 userRouter.post('/forget_Password', authConroller_1.isAuthenticated, userController_1.forgetPassword);
 userRouter.delete('/Deactivate_acct/:id', authConroller_1.isAuthenticated, userController_1.deleteAcct);
 userRouter.post('/reactivate_account', userController_1.reactivateAcct);
-userRouter.post('/logout', authConroller_1.isAuthenticated, userController_1.logout);
+userRouter.post('/ logout', authConroller_1.isAuthenticated, userController_1.logout);
 exports.default = userRouter;
 //# sourceMappingURL=userRoute.js.map

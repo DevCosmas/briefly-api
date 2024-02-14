@@ -5,6 +5,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import errorHandler from './controller/errorHandler';
 import AppError from './utils/errorhandler';
 import userRouter from './routes/userRoute';
+import urlRouter from './routes/urlRoutes';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
@@ -29,6 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // routes
 app.use('/api/user', userRouter);
+app.use('/', urlRouter);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError('page not found', 404));

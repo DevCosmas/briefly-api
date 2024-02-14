@@ -1,0 +1,1 @@
+{"version":3,"file":"urlRoutes.js","sourceRoot":"","sources":["../../src/routes/urlRoutes.ts"],"names":[],"mappings":";;;;;AAAA,sDAA8B;AAC9B,+DAA0E;AAC1E,+DAA8D;AAE9D,MAAM,SAAS,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AACnC,SAAS,CAAC,IAAI,CAAC,YAAY,EAAE,+BAAe,EAAE,8BAAc,CAAC,CAAC;AAC9D,SAAS,CAAC,GAAG,CAAC,WAAW,EAAE,2BAAW,CAAC,CAAC;AAExC,kBAAe,SAAS,CAAC"}
