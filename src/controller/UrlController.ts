@@ -10,7 +10,6 @@ async function createShortUrl(req: Request, res: Response, next: NextFunction) {
   if (!body) next(new AppError('Your Original Url Pls!', 400));
   body.shortUrl = shortId.generate();
   body.userId = (req as any).user;
-  //   console.log(body);
   const newUrl: string = `${(req as any).protocol}://${(req as any).get(
     'host'
   )}/${body.shortUrl}`;
@@ -53,26 +52,44 @@ async function updateUrl(req: Request, res: Response, next: NextFunction) {
     const findUrl: any = await UrlModel.findOne({
       shortUrl: req.params.shortId,
     });
-    if (!findUrl.userId._Id === (req as any).user.id)
+    if (!findUrl || findUrl === null)
+      return next(new AppError('Nothing as found', 404));
+    console.log((req as any).user._id);
+    console.log(findUrl.userId._id);
+    if (findUrl.userId._id.toString() !== (req as any).user._id.toString())
       return next(
         new AppError('You are not authorized to perform this action', 401)
       );
     findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
+    const newUrl: string = `${(req as any).protocol}://${(req as any).get(
+      'host'
+    )}/${findUrl.shortUrl}`;
     await findUrl.save();
     res.status(200).json({
       status: 'success',
       message: 'You have updated this url',
       updatedUrl: findUrl,
+      newUrl,
     });
   } catch (err: any) {
     next(new AppError(err.message, 500));
   }
 }
+
 async function deleteUrl(req: Request, res: Response, next: NextFunction) {
   try {
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
-    const deleteUrl = UrlModel.findByIdAndDelete(req.params.id);
+    const findUrl: any = await UrlModel.findOne({
+      _id: req.params.id,
+    });
+    if (!findUrl || findUrl === null)
+      return next(new AppError('Nothing is found', 404));
+    if (findUrl.userId._id.toString() !== (req as any).user._id.toString())
+      return next(
+        new AppError('You are not authorized to perform this action', 401)
+      );
+    const deleteUrl = UrlModel.deleteOne({ _id: req.params.id });
     res
       .status(200)
       .json({ status: 'success', message: 'You have deleted this Url' });
@@ -80,11 +97,12 @@ async function deleteUrl(req: Request, res: Response, next: NextFunction) {
     next(new AppError(err.message, 500));
   }
 }
+
 async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
   try {
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
-    const allMyUrl: any = UrlModel.find({ _id: (req as any).user.id });
+    const allMyUrl = await UrlModel.find({ userId: (req as any).user._id });
     if (!allMyUrl || allMyUrl.length === 0)
       return next(new AppError('No Url link was found!', 404));
     res.status(200).json({
@@ -102,15 +120,15 @@ async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
   try {
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
-    const myUrl: any = UrlModel.findOne({
-      _id: (req as any).user.id,
+    const myUrl: any = await UrlModel.findOne({
+      userId: (req as any).user._id,
       shortUrl: req.params.shortId,
     });
     if (!myUrl || myUrl.length === 0)
       return next(new AppError('No Url link was found!', 404));
     res.status(200).json({
       status: 'success',
-      message: 'This is a list of Your Urls',
+      message: 'Here is Your Url link',
       size: myUrl.length,
       myUrl,
     });
@@ -118,6 +136,7 @@ async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
     next(new AppError(err.message, 500));
   }
 }
+
 export {
   createShortUrl,
   RedirectUrl,
