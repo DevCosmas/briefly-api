@@ -1,5 +1,12 @@
 import express from 'express';
-import { createShortUrl, RedirectUrl } from '../controller/UrlController';
+import {
+  createShortUrl,
+  RedirectUrl,
+  updateUrl,
+  findAllMyUrl,
+  findOneOfMyUrl,
+  deleteUrl,
+} from '../controller/UrlController';
 import { isAuthenticated } from '../controller/authConroller';
 
 const urlRouter = express.Router();

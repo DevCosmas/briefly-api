@@ -59,10 +59,70 @@ async function updateUrl(req: Request, res: Response, next: NextFunction) {
       );
     findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
     await findUrl.save();
-    res.status(200).json({ status: 'success', updatedUrl: findUrl });
+    res.status(200).json({
+      status: 'success',
+      message: 'You have updated this url',
+      updatedUrl: findUrl,
+    });
+  } catch (err: any) {
+    next(new AppError(err.message, 500));
+  }
+}
+async function deleteUrl(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!(req as any).user.active === true)
+      return next(new AppError('Login or Sign up again', 401));
+    const deleteUrl = UrlModel.findByIdAndDelete(req.params.id);
+    res
+      .status(200)
+      .json({ status: 'success', message: 'You have deleted this Url' });
+  } catch (err: any) {
+    next(new AppError(err.message, 500));
+  }
+}
+async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!(req as any).user.active === true)
+      return next(new AppError('Login or Sign up again', 401));
+    const allMyUrl: any = UrlModel.find({ _id: (req as any).user.id });
+    if (!allMyUrl || allMyUrl.length === 0)
+      return next(new AppError('No Url link was found!', 404));
+    res.status(200).json({
+      status: 'success',
+      message: 'This is a list of Your Urls',
+      size: allMyUrl.length,
+      allMyUrl,
+    });
   } catch (err: any) {
     next(new AppError(err.message, 500));
   }
 }
 
-export { createShortUrl, RedirectUrl, updateUrl };
+async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!(req as any).user.active === true)
+      return next(new AppError('Login or Sign up again', 401));
+    const myUrl: any = UrlModel.findOne({
+      _id: (req as any).user.id,
+      shortUrl: req.params.shortId,
+    });
+    if (!myUrl || myUrl.length === 0)
+      return next(new AppError('No Url link was found!', 404));
+    res.status(200).json({
+      status: 'success',
+      message: 'This is a list of Your Urls',
+      size: myUrl.length,
+      myUrl,
+    });
+  } catch (err: any) {
+    next(new AppError(err.message, 500));
+  }
+}
+export {
+  createShortUrl,
+  RedirectUrl,
+  updateUrl,
+  findAllMyUrl,
+  findOneOfMyUrl,
+  deleteUrl,
+};
