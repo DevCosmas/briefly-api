@@ -25,8 +25,8 @@ const isAuthenticated = async (
       process.env.JWT_SECRET_KEY as string
     ) as { id: string; iat: number };
     const currentTime = Math.floor(Date.now() / 1000);
-    console.log(currentTime);
-    console.log(decodedToken.iat);
+    // console.log(currentTime);
+    // console.log(decodedToken.iat);
     if (decodedToken.iat > currentTime) {
       return next(new AppError('Token expired', 401));
     }
@@ -42,7 +42,7 @@ const isAuthenticated = async (
 
     next();
   } catch (err: any) {
-    next(new AppError(err.message, 500)); // Handle any unexpected errors
+    next(new AppError(err.message, 500)); 
   }
 };
 

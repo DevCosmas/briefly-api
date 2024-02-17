@@ -6,6 +6,7 @@ interface UrlDocument extends Document {
   whoVisited?: Array<string>;
   visitationCount?: number;
   userId?: ObjectId;
+  newUrl: string;
 }
 
 const UrlSchema = new Schema<UrlDocument>({
@@ -31,6 +32,7 @@ const UrlSchema = new Schema<UrlDocument>({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+  newUrl: String,
 });
 
 const UrlModel: Model<UrlDocument> = mongoose.model<UrlDocument>(

@@ -23,33 +23,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UrlModel = void 0;
-const mongoose_1 = __importStar(require("mongoose"));
-const UrlSchema = new mongoose_1.Schema({
-    shortUrl: {
-        type: String,
-        trim: true,
-        unique: true,
-        lowercase: true,
+const redis = __importStar(require("redis"));
+const client = redis.createClient({
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
     },
-    originalUrl: {
-        type: String,
-        trim: true,
-    },
-    whoVisited: {
-        type: [String],
-        default: [],
-    },
-    visitationCount: {
-        type: Number,
-        default: 0,
-    },
-    userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User',
-    },
-    newUrl: String,
 });
-const UrlModel = mongoose_1.default.model('Url', UrlSchema);
-exports.UrlModel = UrlModel;
-//# sourceMappingURL=shortenedUrl.js.map
+// const client: any = redis.createClient(process.env.REDIS_HOST as any);
+client.on('error', (err) => console.log('Redis Client Error', err));
+client.connect();
+exports.default = client;
+//# sourceMappingURL=redis.js.map

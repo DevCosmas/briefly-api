@@ -16,24 +16,10 @@ exports.deleteUrl = exports.findOneOfMyUrl = exports.findAllMyUrl = exports.upda
 const shortid_1 = __importDefault(require("shortid"));
 const shortenedUrl_1 = require("../model/shortenedUrl");
 const errorhandler_1 = __importDefault(require("../utils/errorhandler"));
-function createShortUrl(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const body = req.body;
-        if (!body)
-            next(new errorhandler_1.default('Your Original Url Pls!', 400));
-        body.shortUrl = shortid_1.default.generate();
-        body.userId = req.user;
-        const newUrl = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
-        try {
-            const newDoc = yield shortenedUrl_1.UrlModel.create(body);
-            res.status(201).json({ status: 'success', newUrl, newDoc });
-        }
-        catch (err) {
-            next(new errorhandler_1.default(err, 500));
-        }
-    });
-}
-exports.createShortUrl = createShortUrl;
+const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
+const redis_1 = __importDefault(require("../redis"));
+// client.set = util.promisify(client.set).bind(client.set);
+// client.get = util.promisify(client.get).bind(client.get);
 function RedirectUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -89,6 +75,25 @@ function updateUrl(req, res, next) {
     });
 }
 exports.updateUrl = updateUrl;
+function createShortUrl(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const body = req.body;
+        if (!body)
+            next(new errorhandler_1.default('Your Original Url Pls!', 400));
+        body.shortUrl = shortid_1.default.generate();
+        body.userId = req.user;
+        const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
+        body.newUrl = url;
+        try {
+            const newDoc = yield shortenedUrl_1.UrlModel.create(body);
+            res.status(201).json({ status: 'success', newDoc });
+        }
+        catch (err) {
+            next(new errorhandler_1.default(err, 500));
+        }
+    });
+}
+exports.createShortUrl = createShortUrl;
 function deleteUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -117,15 +122,25 @@ function findAllMyUrl(req, res, next) {
         try {
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
-            const allMyUrl = yield shortenedUrl_1.UrlModel.find({ userId: req.user._id });
-            if (!allMyUrl || allMyUrl.length === 0)
-                return next(new errorhandler_1.default('No Url link was found!', 404));
-            res.status(200).json({
-                status: 'success',
-                message: 'This is a list of Your Urls',
-                size: allMyUrl.length,
-                allMyUrl,
-            });
+            const cachedUrl = yield redis_1.default.get(`myUrl-${req.user.id}`);
+            if (cachedUrl) {
+                const sendResponse = new sendResponse_1.default(res);
+                sendResponse.sendJson(JSON.parse(cachedUrl), 'This is a list of Your Urls', 200);
+            }
+            else {
+                const allMyUrl = yield shortenedUrl_1.UrlModel.find({ userId: req.user._id });
+                if (!allMyUrl || allMyUrl.length === 0)
+                    return next(new errorhandler_1.default('No Url link was found!', 404));
+                yield redis_1.default.set(`myUrl-${req.user.id}`, JSON.stringify(allMyUrl));
+                yield redis_1.default.expire(`myUrl-${req.user.id}`, 3600);
+                console.log('we reached here');
+                res.status(200).json({
+                    status: 'success',
+                    message: 'This is a list of Your Urls',
+                    size: allMyUrl.length,
+                    allMyUrl,
+                });
+            }
         }
         catch (err) {
             next(new errorhandler_1.default(err.message, 500));
@@ -136,20 +151,32 @@ exports.findAllMyUrl = findAllMyUrl;
 function findOneOfMyUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
-            const myUrl = yield shortenedUrl_1.UrlModel.findOne({
-                userId: req.user._id,
-                shortUrl: req.params.shortId,
-            });
-            if (!myUrl || myUrl.length === 0)
-                return next(new errorhandler_1.default('No Url link was found!', 404));
-            res.status(200).json({
-                status: 'success',
-                message: 'Here is Your Url link',
-                size: myUrl.length,
-                myUrl,
-            });
+            const cachedUrl = yield redis_1.default.get(`oneUrl-${req.user.id}`);
+            // console.log(JSON.parse(cachedUrl));
+            console.log('data is cached');
+            if (cachedUrl) {
+                const sendResponse = new sendResponse_1.default(res);
+                sendResponse.sendJson(JSON.parse(cachedUrl), 'This is a list of Your Urls', 200);
+            }
+            else {
+                const myUrl = yield shortenedUrl_1.UrlModel.findOne({
+                    userId: req.user._id,
+                    shortUrl: req.params.shortId,
+                });
+                if (!myUrl || myUrl.length === 0)
+                    return next(new errorhandler_1.default('No Url link was found!', 404));
+                yield redis_1.default.set(`oneUrl-${req.user.id}`, JSON.stringify(myUrl));
+                yield redis_1.default.expire(`oneUrl-${req.user.id}`, 3600);
+                res.status(200).json({
+                    status: 'success',
+                    message: 'Here is Your Url link',
+                    size: myUrl.length,
+                    myUrl,
+                });
+            }
         }
         catch (err) {
             next(new errorhandler_1.default(err.message, 500));

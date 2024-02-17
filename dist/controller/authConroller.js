@@ -32,8 +32,8 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY);
         const currentTime = Math.floor(Date.now() / 1000);
-        console.log(currentTime);
-        console.log(decodedToken.iat);
+        // console.log(currentTime);
+        // console.log(decodedToken.iat);
         if (decodedToken.iat > currentTime) {
             return next(new errorhandler_1.default('Token expired', 401));
         }
@@ -47,7 +47,7 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next();
     }
     catch (err) {
-        next(new errorhandler_1.default(err.message, 500)); // Handle any unexpected errors
+        next(new errorhandler_1.default(err.message, 500));
     }
 });
 exports.isAuthenticated = isAuthenticated;
