@@ -4,8 +4,8 @@ dotenv.config();
 import express, { Express, Request, Response, NextFunction } from 'express';
 import errorHandler from '../controller/errorHandler';
 import AppError from './errorhandler';
-import userRouter from '../routes/userRoute';
-import urlRouter from '../routes/urlRoutes';
+import userRouter from '.././routes/userRoute';
+import urlRouter from '.././routes/urlRoutes';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import rateLimit from 'express-rate-limit';
@@ -27,6 +27,7 @@ function createServer() {
   const app: Express = express();
   mongoDbConnection();
 
+  app.set('trust proxy', 1);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
