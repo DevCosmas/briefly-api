@@ -7,11 +7,12 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const errorhandler_1 = __importDefault(require("./errorhandler"));
-const userRoute_1 = __importDefault(require("../routes/userRoute"));
-const urlRoutes_1 = __importDefault(require("../routes/urlRoutes"));
+const userRoute_1 = __importDefault(require(".././routes/userRoute"));
+const urlRoutes_1 = __importDefault(require(".././routes/urlRoutes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const path_1 = __importDefault(require("path"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const cors_1 = __importDefault(require("cors"));
 // import helmet from 'helmet';
 const morgan_1 = __importDefault(require("morgan"));
 const config_1 = require("../config");
@@ -25,9 +26,13 @@ function createServer() {
     // connection
     const app = (0, express_1.default)();
     (0, config_1.mongoDbConnection)();
+    app.set('trust proxy', 1);
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
     app.use((0, morgan_1.default)('combined'));
+    app.use((0, cors_1.default)({
+        origin: 'http://localhost:3000',
+    }));
     app.use((0, cookie_parser_1.default)());
     app.set('view engine', 'ejs');
     app.set('views', path_1.default.join(__dirname, 'views'));
