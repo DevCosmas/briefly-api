@@ -18,6 +18,7 @@ async function signUp(
   try {
     console.log('we start here');
     const body = (req as any).body;
+    if (req.file) body.photo = req.file.filename;
     const newUser = await userModel.create(body);
     if (!newUser) {
       return next(new AppError('Fill in the correct details please', 400));
@@ -85,6 +86,9 @@ async function updateProfile(
   try {
     if ((req as any).user.active === true) {
       const updatesDetails = req.body;
+        updatesDetails.photo = req.file
+          ? req.file.filename
+          : (req as any).user.photo;
       const updatedUser = await userModel
         .findByIdAndUpdate((req as any).user._id, updatesDetails, {
           new: true,

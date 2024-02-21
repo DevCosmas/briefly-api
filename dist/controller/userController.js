@@ -23,6 +23,8 @@ function signUp(req, res, next) {
         try {
             console.log('we start here');
             const body = req.body;
+            if (req.file)
+                body.photo = req.file.filename;
             const newUser = yield user_1.userModel.create(body);
             if (!newUser) {
                 return next(new errorhandler_1.default('Fill in the correct details please', 400));
@@ -81,6 +83,9 @@ function updateProfile(req, res, next) {
         try {
             if (req.user.active === true) {
                 const updatesDetails = req.body;
+                updatesDetails.photo = req.file
+                    ? req.file.filename
+                    : req.user.photo;
                 const updatedUser = yield user_1.userModel
                     .findByIdAndUpdate(req.user._id, updatesDetails, {
                     new: true,
