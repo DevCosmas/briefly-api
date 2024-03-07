@@ -40,6 +40,7 @@ class EmailSender {
                 console.log('Email sent to:', toAddress);
             }
             catch (error) {
+                console.log(error);
                 throw new errorhandler_1.default(error, 500);
             }
         });

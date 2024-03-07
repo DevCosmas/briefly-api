@@ -6,9 +6,6 @@ import SendResponse from '../utils/sendResponse';
 import client from '../redis';
 import util from 'util';
 
-// client.set = util.promisify(client.set).bind(client.set);
-// client.get = util.promisify(client.get).bind(client.get);
-
 async function RedirectUrl(req: Request, res: Response, next: NextFunction) {
   try {
     const shortId: string = req.params.shortId;
@@ -111,40 +108,23 @@ async function deleteUrl(req: Request, res: Response, next: NextFunction) {
 async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
   try {
     const userID = (req as any).user._id || req.query.id;
-    console.log((req as any).user);
+
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
 
-    const cachedUrl: any = await client.get(`myUrl-${(req as any).user.id}`);
-    if (cachedUrl) {
-      const sendResponse = new SendResponse(res);
-      sendResponse.sendJson(
-        JSON.parse(cachedUrl),
-        'This is a list of Your Urls',
-        200
-      );
-    } else {
-      const allMyUrl = await UrlModel.find({ userId: userID }).sort({
-        createdAt: -1,
-      });
-      console.log(allMyUrl);
-      if (!allMyUrl || allMyUrl.length === 0)
-        return next(new AppError('No Url link was found!', 404));
+    const data = await UrlModel.find({ userId: userID }).sort({
+      createdAt: -1,
+    });
 
-      await client.set(
-        `myUrl-${(req as any).user.id}`,
-        JSON.stringify(allMyUrl)
-      );
-      await client.expire(`myUrl-${(req as any).user.id}`, 3600);
+    if (!data || data.length === 0)
+      return next(new AppError('No Url link was found!', 404));
 
-      console.log('we reached here');
-      res.status(200).json({
-        status: 'success',
-        message: 'This is a list of Your Urls',
-        size: allMyUrl.length,
-        allMyUrl,
-      });
-    }
+    res.status(200).json({
+      status: 'success',
+      message: 'This is a list of Your Urls',
+      size: data.length,
+      data,
+    });
   } catch (err: any) {
     next(new AppError(err.message, 500));
   }
@@ -155,25 +135,14 @@ async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
     console.log((req as any).user);
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
-    // const cachedUrl: any = await client.get(`oneUrl-${(req as any).user.id}`);
-    // // console.log(JSON.parse(cachedUrl));
-    // console.log('data is cached');
-    // if (cachedUrl) {
-    //   const sendResponse = new SendResponse(res);
-    //   sendResponse.sendJson(
-    //     JSON.parse(cachedUrl),
-    //     'This is a list of Your Urls',
-    //     200
-    //   );
-    // } else {
+
     const myUrl: any = await UrlModel.findOne({
       userId: (req as any).user._id,
       shortUrl: req.params.shortId,
     });
     if (!myUrl || myUrl.length === 0)
       return next(new AppError('No Url link was found!', 404));
-    // await client.set(`oneUrl-${(req as any).user.id}`, JSON.stringify(myUrl));
-    // await client.expire(`oneUrl-${(req as any).user.id}`, 3600);
+
     res.status(200).json({
       status: 'success',
       message: 'Here is Your Url link',

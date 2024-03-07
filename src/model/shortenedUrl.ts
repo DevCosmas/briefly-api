@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Model, ObjectId } from 'mongoose';
+import validator from 'validator';
 
 interface UrlDocument extends Document {
   shortUrl: string;
@@ -20,6 +21,11 @@ const UrlSchema = new Schema<UrlDocument>({
   originalUrl: {
     type: String,
     trim: true,
+    required: [true, 'valid url required'],
+    validate: {
+      validator: (value: string) => validator.isURL(value),
+      message: 'Invalid URL',
+    },
   },
   whoVisited: {
     type: [String],

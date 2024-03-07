@@ -22,9 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UrlModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const validator_1 = __importDefault(require("validator"));
 const UrlSchema = new mongoose_1.Schema({
     shortUrl: {
         type: String,
@@ -35,6 +39,11 @@ const UrlSchema = new mongoose_1.Schema({
     originalUrl: {
         type: String,
         trim: true,
+        required: [true, 'valid url required'],
+        validate: {
+            validator: (value) => validator_1.default.isURL(value),
+            message: 'Invalid URL',
+        },
     },
     whoVisited: {
         type: [String],

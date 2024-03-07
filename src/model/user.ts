@@ -6,7 +6,7 @@ import crypto from 'crypto';
 interface UserDocument extends Document {
   email: string;
   username?: string;
-  photo?: string;
+
   password: string;
   resetPasswordToken?: string;
   resetTimeExp?: Date;
@@ -33,11 +33,6 @@ const userSchema = new Schema<UserDocument>({
     },
   },
 
-  photo: {
-    type: String,
-    trim: true,
-    default: 'TackleDefaultPics.png',
-  },
   username: {
     type: String,
     unique: true,

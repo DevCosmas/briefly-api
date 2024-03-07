@@ -3,7 +3,6 @@ import AppError from '../utils/errorhandler';
 
 const handleTokenExpire = (res: Response) => {
   return new AppError('kindly login again', 400);
-  // return res.status(200).render('login');
 };
 
 const handleCastError = (err: any) => {

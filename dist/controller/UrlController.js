@@ -16,10 +16,6 @@ exports.deleteUrl = exports.findOneOfMyUrl = exports.findAllMyUrl = exports.upda
 const shortid_1 = __importDefault(require("shortid"));
 const shortenedUrl_1 = require("../model/shortenedUrl");
 const errorhandler_1 = __importDefault(require("../utils/errorhandler"));
-const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
-const redis_1 = __importDefault(require("../redis"));
-// client.set = util.promisify(client.set).bind(client.set);
-// client.get = util.promisify(client.get).bind(client.get);
 function RedirectUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -125,31 +121,19 @@ function findAllMyUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const userID = req.user._id || req.query.id;
-            console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
-            const cachedUrl = yield redis_1.default.get(`myUrl-${req.user.id}`);
-            if (cachedUrl) {
-                const sendResponse = new sendResponse_1.default(res);
-                sendResponse.sendJson(JSON.parse(cachedUrl), 'This is a list of Your Urls', 200);
-            }
-            else {
-                const allMyUrl = yield shortenedUrl_1.UrlModel.find({ userId: userID }).sort({
-                    createdAt: -1,
-                });
-                console.log(allMyUrl);
-                if (!allMyUrl || allMyUrl.length === 0)
-                    return next(new errorhandler_1.default('No Url link was found!', 404));
-                yield redis_1.default.set(`myUrl-${req.user.id}`, JSON.stringify(allMyUrl));
-                yield redis_1.default.expire(`myUrl-${req.user.id}`, 3600);
-                console.log('we reached here');
-                res.status(200).json({
-                    status: 'success',
-                    message: 'This is a list of Your Urls',
-                    size: allMyUrl.length,
-                    allMyUrl,
-                });
-            }
+            const data = yield shortenedUrl_1.UrlModel.find({ userId: userID }).sort({
+                createdAt: -1,
+            });
+            if (!data || data.length === 0)
+                return next(new errorhandler_1.default('No Url link was found!', 404));
+            res.status(200).json({
+                status: 'success',
+                message: 'This is a list of Your Urls',
+                size: data.length,
+                data,
+            });
         }
         catch (err) {
             next(new errorhandler_1.default(err.message, 500));
@@ -163,25 +147,12 @@ function findOneOfMyUrl(req, res, next) {
             console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
-            // const cachedUrl: any = await client.get(`oneUrl-${(req as any).user.id}`);
-            // // console.log(JSON.parse(cachedUrl));
-            // console.log('data is cached');
-            // if (cachedUrl) {
-            //   const sendResponse = new SendResponse(res);
-            //   sendResponse.sendJson(
-            //     JSON.parse(cachedUrl),
-            //     'This is a list of Your Urls',
-            //     200
-            //   );
-            // } else {
             const myUrl = yield shortenedUrl_1.UrlModel.findOne({
                 userId: req.user._id,
                 shortUrl: req.params.shortId,
             });
             if (!myUrl || myUrl.length === 0)
                 return next(new errorhandler_1.default('No Url link was found!', 404));
-            // await client.set(`oneUrl-${(req as any).user.id}`, JSON.stringify(myUrl));
-            // await client.expire(`oneUrl-${(req as any).user.id}`, 3600);
             res.status(200).json({
                 status: 'success',
                 message: 'Here is Your Url link',

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const errorhandler_1 = __importDefault(require("../utils/errorhandler"));
 const handleTokenExpire = (res) => {
     return new errorhandler_1.default('kindly login again', 400);
-    // return res.status(200).render('login');
 };
 const handleCastError = (err) => {
     const value = err.error.value;

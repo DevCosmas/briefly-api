@@ -26,8 +26,8 @@ async function signUp(
     }
 
     const token = await jwtToken(newUser._id);
-    // const sendMail = new EmailSender();
-    // await sendMail.sendWelcomeEmail(newUser);
+    const sendMail = new EmailSender();
+    await sendMail.sendWelcomeEmail(newUser);
     res.cookie('jwt', token, { httpOnly: true });
     res.status(201).json({
       result: 'SUCCESS',

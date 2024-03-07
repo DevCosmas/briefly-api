@@ -14,8 +14,8 @@ import rateLimit from 'express-rate-limit';
 const urlRouter = express.Router();
 
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 1,
+  windowMs: 10 * 60 * 1000,
+  max: 1000,
 });
 
 urlRouter.use((req, res, next) => {
@@ -34,12 +34,3 @@ urlRouter.delete('/deleteUrl/:id', isAuthenticated, deleteUrl);
 urlRouter.get('/:shortId', RedirectUrl);
 
 export default urlRouter;
-// const urlRouter = express.Router();
-// urlRouter.post('/createUrl', isAuthenticated, createShortUrl);
-// urlRouter.get('/findAll', isAuthenticated, findAllMyUrl);
-// urlRouter.get('/myUrls/:shortId', isAuthenticated, findOneOfMyUrl);
-// urlRouter.patch('/updateUrl/:shortId', isAuthenticated, updateUrl);
-// urlRouter.delete('/deleteUrl/:id', isAuthenticated, deleteUrl);
-// urlRouter.get('/:shortId', RedirectUrl);
-
-// export default urlRouter;

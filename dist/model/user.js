@@ -53,11 +53,6 @@ const userSchema = new mongoose_1.Schema({
             message: 'Invalid email address',
         },
     },
-    photo: {
-        type: String,
-        trim: true,
-        default: 'TackleDefaultPics.png',
-    },
     username: {
         type: String,
         unique: true,

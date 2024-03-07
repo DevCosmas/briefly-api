@@ -1,6 +1,6 @@
 import express from 'express';
-import uploadPhoto from '../utils/multerStorage';
-import { isAuthenticated, isLoggedIn } from './../controller/authConroller';
+
+import { isAuthenticated } from './../controller/authConroller';
 
 import {
   signUp,
@@ -15,9 +15,9 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.post('/register', uploadPhoto, signUp);
+userRouter.post('/register', signUp);
 userRouter.post('/login', login);
-userRouter.patch('/Update_me', isAuthenticated, uploadPhoto, updateProfile);
+userRouter.patch('/Update_me', isAuthenticated, updateProfile);
 userRouter.patch('/reset_Password/:Token', resetPassword);
 userRouter.post('/forget_Password', isAuthenticated, forgetPassword);
 userRouter.delete('/Deactivate_acct/:id', isAuthenticated, deleteAcct);

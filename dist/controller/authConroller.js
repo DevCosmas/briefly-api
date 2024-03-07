@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isLoggedIn = exports.isAuthenticated = void 0;
+exports.isAuthenticated = void 0;
 require('dotenv').config();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("./../model/user");
@@ -52,24 +52,4 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.isAuthenticated = isAuthenticated;
-const isLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!req.cookies.jwt) {
-            return next(new errorhandler_1.default('kindly login or sign up', 401));
-        }
-        else if (req.cookies.jwt) {
-            const decodedToken = jsonwebtoken_1.default.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
-            const currentTime = Math.floor(Date.now() / 1000);
-            const user = yield user_1.userModel.findById(decodedToken.id);
-            if (user && decodedToken.iat < currentTime)
-                res.locals.user = user;
-            return next();
-        }
-        next();
-    }
-    catch (err) {
-        next(new errorhandler_1.default(err, 500));
-    }
-});
-exports.isLoggedIn = isLoggedIn;
 //# sourceMappingURL=authConroller.js.map

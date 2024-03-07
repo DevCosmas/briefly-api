@@ -36,6 +36,7 @@ class EmailSender {
       await this.transporter.sendMail(mailOptions);
       console.log('Email sent to:', toAddress);
     } catch (error: any) {
+      console.log(error);
       throw new AppError(error, 500);
     }
   }
