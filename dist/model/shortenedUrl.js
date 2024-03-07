@@ -49,6 +49,10 @@ const UrlSchema = new mongoose_1.Schema({
         ref: 'User',
     },
     newUrl: String,
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+    },
 });
 const UrlModel = mongoose_1.default.model('Url', UrlSchema);
 exports.UrlModel = UrlModel;

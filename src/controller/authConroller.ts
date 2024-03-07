@@ -38,11 +38,12 @@ const isAuthenticated = async (
     }
     {
       (req as any).user = user;
+      res.locals.user = user;
     }
 
     next();
   } catch (err: any) {
-    next(new AppError(err.message, 500)); 
+    next(new AppError(err.message, 500));
   }
 };
 

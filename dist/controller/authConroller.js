@@ -43,6 +43,7 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         {
             req.user = user;
+            res.locals.user = user;
         }
         next();
     }

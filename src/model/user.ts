@@ -21,7 +21,7 @@ interface UserDocument extends Document {
 const userSchema = new Schema<UserDocument>({
   email: {
     type: String,
-    required: [true, 'A user must have an email'],
+    required: [true, 'Email is required'],
     trim: true,
     unique: true,
     lowercase: true,
@@ -44,7 +44,7 @@ const userSchema = new Schema<UserDocument>({
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Password is required'],
     trim: true,
   },
   resetPasswordToken: String,

@@ -30,14 +30,14 @@ function signUp(req, res, next) {
                 return next(new errorhandler_1.default('Fill in the correct details please', 400));
             }
             const token = yield (0, jwt_1.jwtToken)(newUser._id);
-            const sendMail = new email_1.default();
-            yield sendMail.sendWelcomeEmail(newUser);
+            // const sendMail = new EmailSender();
+            // await sendMail.sendWelcomeEmail(newUser);
             res.cookie('jwt', token, { httpOnly: true });
             res.status(201).json({
                 result: 'SUCCESS',
                 message: 'You have successfully signed up',
                 token,
-                userProfile: newUser,
+                user: newUser,
             });
             console.log('we end here');
         }

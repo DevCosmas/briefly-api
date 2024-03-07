@@ -50,23 +50,25 @@ function updateUrl(req, res, next) {
         try {
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
+            if (!req.body)
+                return next(new errorhandler_1.default(`New name can't be blank`, 400));
             const findUrl = yield shortenedUrl_1.UrlModel.findOne({
                 shortUrl: req.params.shortId,
             });
             if (!findUrl || findUrl === null)
-                return next(new errorhandler_1.default('Nothing as found', 404));
+                return next(new errorhandler_1.default('Nothing is found', 404));
             console.log(req.user._id);
             console.log(findUrl.userId._id);
             if (findUrl.userId._id.toString() !== req.user._id.toString())
                 return next(new errorhandler_1.default('You are not authorized to perform this action', 401));
             findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
             const newUrl = `${req.protocol}://${req.get('host')}/${findUrl.shortUrl}`;
+            findUrl.newUrl = newUrl;
             yield findUrl.save();
             res.status(200).json({
                 status: 'success',
-                message: 'You have updated this url',
+                message: 'update successfull',
                 updatedUrl: findUrl,
-                newUrl,
             });
         }
         catch (err) {
@@ -78,7 +80,7 @@ exports.updateUrl = updateUrl;
 function createShortUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const body = req.body;
-        if (!body)
+        if (!body.originalUrl)
             next(new errorhandler_1.default('Your Original Url Pls!', 400));
         body.shortUrl = shortid_1.default.generate();
         body.userId = req.user;
@@ -86,7 +88,9 @@ function createShortUrl(req, res, next) {
         body.newUrl = url;
         try {
             const newDoc = yield shortenedUrl_1.UrlModel.create(body);
-            res.status(201).json({ status: 'success', newDoc });
+            res
+                .status(201)
+                .json({ status: 'success', message: 'New Link Created', newDoc });
         }
         catch (err) {
             next(new errorhandler_1.default(err, 500));
@@ -103,10 +107,10 @@ function deleteUrl(req, res, next) {
                 _id: req.params.id,
             });
             if (!findUrl || findUrl === null)
-                return next(new errorhandler_1.default('Nothing is found', 404));
+                return next(new errorhandler_1.default('Url does not exist', 404));
             if (findUrl.userId._id.toString() !== req.user._id.toString())
                 return next(new errorhandler_1.default('You are not authorized to perform this action', 401));
-            const deleteUrl = shortenedUrl_1.UrlModel.deleteOne({ _id: req.params.id });
+            const deleteUrl = yield shortenedUrl_1.UrlModel.deleteOne({ _id: req.params.id });
             res
                 .status(200)
                 .json({ status: 'success', message: 'You have deleted this Url' });
@@ -120,6 +124,8 @@ exports.deleteUrl = deleteUrl;
 function findAllMyUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const userID = req.user._id || req.query.id;
+            console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
             const cachedUrl = yield redis_1.default.get(`myUrl-${req.user.id}`);
@@ -128,7 +134,10 @@ function findAllMyUrl(req, res, next) {
                 sendResponse.sendJson(JSON.parse(cachedUrl), 'This is a list of Your Urls', 200);
             }
             else {
-                const allMyUrl = yield shortenedUrl_1.UrlModel.find({ userId: req.user._id });
+                const allMyUrl = yield shortenedUrl_1.UrlModel.find({ userId: userID }).sort({
+                    createdAt: -1,
+                });
+                console.log(allMyUrl);
                 if (!allMyUrl || allMyUrl.length === 0)
                     return next(new errorhandler_1.default('No Url link was found!', 404));
                 yield redis_1.default.set(`myUrl-${req.user.id}`, JSON.stringify(allMyUrl));
@@ -154,29 +163,31 @@ function findOneOfMyUrl(req, res, next) {
             console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
-            const cachedUrl = yield redis_1.default.get(`oneUrl-${req.user.id}`);
-            // console.log(JSON.parse(cachedUrl));
-            console.log('data is cached');
-            if (cachedUrl) {
-                const sendResponse = new sendResponse_1.default(res);
-                sendResponse.sendJson(JSON.parse(cachedUrl), 'This is a list of Your Urls', 200);
-            }
-            else {
-                const myUrl = yield shortenedUrl_1.UrlModel.findOne({
-                    userId: req.user._id,
-                    shortUrl: req.params.shortId,
-                });
-                if (!myUrl || myUrl.length === 0)
-                    return next(new errorhandler_1.default('No Url link was found!', 404));
-                yield redis_1.default.set(`oneUrl-${req.user.id}`, JSON.stringify(myUrl));
-                yield redis_1.default.expire(`oneUrl-${req.user.id}`, 3600);
-                res.status(200).json({
-                    status: 'success',
-                    message: 'Here is Your Url link',
-                    size: myUrl.length,
-                    myUrl,
-                });
-            }
+            // const cachedUrl: any = await client.get(`oneUrl-${(req as any).user.id}`);
+            // // console.log(JSON.parse(cachedUrl));
+            // console.log('data is cached');
+            // if (cachedUrl) {
+            //   const sendResponse = new SendResponse(res);
+            //   sendResponse.sendJson(
+            //     JSON.parse(cachedUrl),
+            //     'This is a list of Your Urls',
+            //     200
+            //   );
+            // } else {
+            const myUrl = yield shortenedUrl_1.UrlModel.findOne({
+                userId: req.user._id,
+                shortUrl: req.params.shortId,
+            });
+            if (!myUrl || myUrl.length === 0)
+                return next(new errorhandler_1.default('No Url link was found!', 404));
+            // await client.set(`oneUrl-${(req as any).user.id}`, JSON.stringify(myUrl));
+            // await client.expire(`oneUrl-${(req as any).user.id}`, 3600);
+            res.status(200).json({
+                status: 'success',
+                message: 'Here is Your Url link',
+                size: myUrl.length,
+                myUrl,
+            });
         }
         catch (err) {
             next(new errorhandler_1.default(err.message, 500));

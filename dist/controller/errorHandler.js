@@ -16,7 +16,7 @@ const handleCastError = (err) => {
 const handleDuplicateFields = (err) => {
     const value = err.message.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
     const refinedValue = value.split('"')[1];
-    const message = `${refinedValue} is already registered`;
+    const message = `${refinedValue} is already taken`;
     return new errorhandler_1.default(message, 400);
 };
 const handleValidatorError = (err) => {
@@ -72,5 +72,28 @@ const errorHandler = (error, req, res, next) => {
     }
     next();
 };
+// const errorHandler = (
+//   error: any,
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   error.statusCode = error.statusCode || 500;
+//   error.status = error.status || 'error';
+//   if (process.env.NODE_ENV === 'development') {
+//     sendErrorDev(error, res);
+//   } else if (process.env.NODE_ENV === 'production') {
+//     let err = { ...error };
+//     err.message = error.message;
+//     if (error.error.name === 'CastError') err = handleCastError(error);
+//     if (error.error.code === 11000) err = handleDuplicateFields(error);
+//     if (error.error.name === 'ValidationError')
+//       err = handleValidatorError(error);
+//     if (error.error.name === 'JsonWebTokenError') err = handleJwtError(error);
+//     if (error.error.name === 'TokenExpiredError') err = handleTokenExpire(res);
+//     sendErrorProd(err, res);
+//   }
+//   next();
+// };
 exports.default = errorHandler;
 //# sourceMappingURL=errorHandler.js.map

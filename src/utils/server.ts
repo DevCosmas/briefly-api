@@ -16,16 +16,10 @@ import morgan from 'morgan';
 import { mongoDbConnection } from '../config';
 
 function createServer() {
-  // rate limitig
-  const limiter = rateLimit({
-    windowMs: 5 * 60 * 1000,
-    max: 100,
-    message: 'Too many requests, please try again later.',
-  });
-
   // connection
   const app: Express = express();
   mongoDbConnection();
+  console.log(process.env.NODE_ENV);
 
   app.set('trust proxy', 1);
   app.use(express.json());
@@ -41,9 +35,6 @@ function createServer() {
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'views'));
 
-  // set rate limit
-  app.use(limiter);
-
   // routes
   app.use('/api/user', userRouter);
   app.use('/', urlRouter);
@@ -51,6 +42,7 @@ function createServer() {
   app.all('*', (req: Request, res: Response, next: NextFunction) => {
     next(new AppError('page not found', 404));
   });
+  app.use(errorHandler);
   return app;
 }
 export default createServer;

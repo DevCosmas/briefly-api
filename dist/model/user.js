@@ -42,7 +42,7 @@ const validator_1 = __importDefault(require("validator"));
 const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
-        required: [true, 'A user must have an email'],
+        required: [true, 'Email is required'],
         trim: true,
         unique: true,
         lowercase: true,
@@ -64,7 +64,7 @@ const userSchema = new mongoose_1.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Password is required'],
         trim: true,
     },
     resetPasswordToken: String,

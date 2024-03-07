@@ -7,6 +7,7 @@ interface UrlDocument extends Document {
   visitationCount?: number;
   userId?: ObjectId;
   newUrl: string;
+  createdAt?: Date;
 }
 
 const UrlSchema = new Schema<UrlDocument>({
@@ -33,6 +34,10 @@ const UrlSchema = new Schema<UrlDocument>({
     ref: 'User',
   },
   newUrl: String,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const UrlModel: Model<UrlDocument> = mongoose.model<UrlDocument>(
