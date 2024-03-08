@@ -19,7 +19,7 @@ userRouter.post('/register', signUp);
 userRouter.post('/login', login);
 userRouter.patch('/Update_me', isAuthenticated, updateProfile);
 userRouter.patch('/reset_Password/:Token', resetPassword);
-userRouter.post('/forget_Password', isAuthenticated, forgetPassword);
+userRouter.post('/forget_Password', forgetPassword);
 userRouter.delete('/Deactivate_acct/:id', isAuthenticated, deleteAcct);
 userRouter.post('/reactivate_account', reactivateAcct);
 userRouter.post('/ logout', isAuthenticated, logout);

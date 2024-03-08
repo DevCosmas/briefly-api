@@ -11,7 +11,7 @@ userRouter.post('/register', userController_1.signUp);
 userRouter.post('/login', userController_1.login);
 userRouter.patch('/Update_me', authConroller_1.isAuthenticated, userController_1.updateProfile);
 userRouter.patch('/reset_Password/:Token', userController_1.resetPassword);
-userRouter.post('/forget_Password', authConroller_1.isAuthenticated, userController_1.forgetPassword);
+userRouter.post('/forget_Password', userController_1.forgetPassword);
 userRouter.delete('/Deactivate_acct/:id', authConroller_1.isAuthenticated, userController_1.deleteAcct);
 userRouter.post('/reactivate_account', userController_1.reactivateAcct);
 userRouter.post('/ logout', authConroller_1.isAuthenticated, userController_1.logout);
