@@ -28,7 +28,7 @@ function createServer() {
   app.use(morgan('combined'));
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: 'https://briefly-api.onrender.com',
     })
   );
   app.use(cookieParser());
