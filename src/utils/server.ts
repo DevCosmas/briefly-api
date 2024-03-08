@@ -28,7 +28,7 @@ function createServer() {
   app.use(morgan('combined'));
   app.use(
     cors({
-      origin: 'https://briefly-api.onrender.com',
+      origin: 'https://briefly-client.netlify.app/',
       credentials: true,
     })
   );
