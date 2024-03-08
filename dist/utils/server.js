@@ -26,7 +26,7 @@ function createServer() {
     app.use(express_1.default.urlencoded({ extended: true }));
     app.use((0, morgan_1.default)('combined'));
     app.use((0, cors_1.default)({
-        origin: 'http://localhost:3000',
+        origin: '*',
         credentials: true,
     }));
     app.use((0, cookie_parser_1.default)());

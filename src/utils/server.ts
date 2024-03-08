@@ -28,10 +28,11 @@ function createServer() {
   app.use(morgan('combined'));
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: '*',
       credentials: true,
     })
   );
+
   app.use(cookieParser());
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'views'));
