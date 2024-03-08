@@ -28,7 +28,7 @@ function createServer() {
   app.use(morgan('combined'));
   app.use(
     cors({
-      origin: 'https://briefly-client.netlify.app/',
+      origin: 'http://localhost:3000',
       credentials: true,
     })
   );
