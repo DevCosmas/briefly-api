@@ -41,8 +41,7 @@ async function updateUrl(req: Request, res: Response, next: NextFunction) {
     });
     if (!findUrl || findUrl === null)
       return next(new AppError('Nothing is found', 404));
-    console.log((req as any).user._id);
-    console.log(findUrl.userId._id);
+
     if (findUrl.userId._id.toString() !== (req as any).user._id.toString())
       return next(
         new AppError('You are not authorized to perform this action', 401)
@@ -64,18 +63,17 @@ async function updateUrl(req: Request, res: Response, next: NextFunction) {
 }
 
 async function createShortUrl(req: Request, res: Response, next: NextFunction) {
-  const body = req.body;
-
-  if (!body.originalUrl) next(new AppError('Your Original Url Pls!', 400));
-  body.shortUrl = shortId.generate();
-  body.userId = (req as any).user;
-  const url: string = `${(req as any).protocol}://${(req as any).get('host')}/${
-    body.shortUrl
-  }`;
-  body.newUrl = url;
   try {
+    const body = req.body;
+    if (!body.originalUrl) next(new AppError('Your Original Url Pls!', 400));
+    body.shortUrl = shortId.generate();
+    body.userId = (req as any).user;
+    const url: string = `${(req as any).protocol}://${(req as any).get(
+      'host'
+    )}/${body.shortUrl}`;
+    body.newUrl = url;
     const newDoc = await UrlModel.create(body);
-    (res as any)
+    res
       .status(201)
       .json({ status: 'success', message: 'New Link Created', newDoc });
   } catch (err: any) {
@@ -132,7 +130,6 @@ async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
 
 async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log((req as any).user);
     if (!(req as any).user.active === true)
       return next(new AppError('Login or Sign up again', 401));
 

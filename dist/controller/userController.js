@@ -63,7 +63,6 @@ function login(req, res, next) {
             }
             // Generate a token for use
             const token = yield (0, jwt_1.jwtToken)(isValidUser._id);
-            res.cookie('jwt', token, { httpOnly: true });
             res.status(200).json({
                 result: 'SUCCESS',
                 message: 'You are logged in now',
@@ -124,9 +123,6 @@ function deleteAcct(req, res, next) {
 }
 exports.deleteAcct = deleteAcct;
 const logout = (req, res) => {
-    res.clearCookie('jwt', {
-        httpOnly: true,
-    });
     return res
         .status(200)
         .json({ message: 'You have been successfully logged out' });
@@ -173,7 +169,6 @@ function resetPassword(req, res, next) {
             user.resetTimeExp = undefined;
             yield user.save();
             const token = yield (0, jwt_1.jwtToken)(user._id);
-            res.cookie('jwt', token, { httpOnly: true });
             res
                 .status(200)
                 .json({ message: 'A new password has been set', token, user });

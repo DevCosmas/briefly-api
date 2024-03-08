@@ -65,7 +65,6 @@ async function login(
     // Generate a token for use
     const token = await jwtToken(isValidUser._id);
 
-    res.cookie('jwt', token, { httpOnly: true });
     res.status(200).json({
       result: 'SUCCESS',
       message: 'You are logged in now',
@@ -127,10 +126,6 @@ async function deleteAcct(
 }
 
 const logout = (req: Request, res: Response): Response => {
-  res.clearCookie('jwt', {
-    httpOnly: true,
-  });
-
   return res
     .status(200)
     .json({ message: 'You have been successfully logged out' });
@@ -184,7 +179,7 @@ async function resetPassword(
 
     await user.save();
     const token = await jwtToken(user._id);
-    res.cookie('jwt', token, { httpOnly: true });
+
     res
       .status(200)
       .json({ message: 'A new password has been set', token, user });

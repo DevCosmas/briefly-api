@@ -53,8 +53,6 @@ function updateUrl(req, res, next) {
             });
             if (!findUrl || findUrl === null)
                 return next(new errorhandler_1.default('Nothing is found', 404));
-            console.log(req.user._id);
-            console.log(findUrl.userId._id);
             if (findUrl.userId._id.toString() !== req.user._id.toString())
                 return next(new errorhandler_1.default('You are not authorized to perform this action', 401));
             findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
@@ -75,14 +73,14 @@ function updateUrl(req, res, next) {
 exports.updateUrl = updateUrl;
 function createShortUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const body = req.body;
-        if (!body.originalUrl)
-            next(new errorhandler_1.default('Your Original Url Pls!', 400));
-        body.shortUrl = shortid_1.default.generate();
-        body.userId = req.user;
-        const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
-        body.newUrl = url;
         try {
+            const body = req.body;
+            if (!body.originalUrl)
+                next(new errorhandler_1.default('Your Original Url Pls!', 400));
+            body.shortUrl = shortid_1.default.generate();
+            body.userId = req.user;
+            const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
+            body.newUrl = url;
             const newDoc = yield shortenedUrl_1.UrlModel.create(body);
             res
                 .status(201)
@@ -144,7 +142,6 @@ exports.findAllMyUrl = findAllMyUrl;
 function findOneOfMyUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(req.user);
             if (!req.user.active === true)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
             const myUrl = yield shortenedUrl_1.UrlModel.findOne({
