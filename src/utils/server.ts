@@ -29,6 +29,7 @@ function createServer() {
   app.use(
     cors({
       origin: 'https://briefly-api.onrender.com',
+      credentials: true,
     })
   );
   app.use(cookieParser());

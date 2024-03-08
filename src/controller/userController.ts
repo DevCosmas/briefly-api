@@ -31,7 +31,7 @@ async function signUp(
     res.cookie('jwt', token, { httpOnly: true });
     res.status(201).json({
       result: 'SUCCESS',
-      message: 'You have successfully signed up',
+      message: 'Sign up complete',
       token,
       user: newUser,
     });
