@@ -138,7 +138,7 @@ function forgetPassword(req, res, next) {
                 return next(new errorhandler_1.default('This user does not exist', 404));
             const resetToken = yield user.createResetToken();
             console.log(resetToken);
-            const url = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
+            const url = `https://briefly-client.netlify.app/resetPassword/${resetToken}`;
             const sendMail = new email_1.default();
             yield sendMail.sendPasswordResetEmail(user, resetToken, url);
             yield user.save({ validateBeforeSave: false });

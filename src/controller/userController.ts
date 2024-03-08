@@ -144,9 +144,7 @@ async function forgetPassword(
     const resetToken = await user.createResetToken();
 
     console.log(resetToken);
-    const url: string = `${req.protocol}://${req.get(
-      'host'
-    )}/resetPassword/${resetToken}`;
+    const url: string = `https://briefly-client.netlify.app/resetPassword/${resetToken}`;
     const sendMail = new EmailSender();
     await sendMail.sendPasswordResetEmail(user, resetToken, url);
     await user.save({ validateBeforeSave: false });
