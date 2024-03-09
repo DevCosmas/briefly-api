@@ -30,7 +30,7 @@ async function signUp(
     await sendMail.sendWelcomeEmail(newUser);
     res.cookie('jwt', token, { httpOnly: true });
     res.status(201).json({
-      result: 'SUCCESS',
+      status: 'success',
       message: 'Sign up complete',
       token,
       user: newUser,
@@ -66,7 +66,7 @@ async function login(
     const token = await jwtToken(isValidUser._id);
 
     res.status(200).json({
-      result: 'SUCCESS',
+      status: 'success',
       message: 'You are logged in now',
       token,
       user: isValidUser,
@@ -144,11 +144,12 @@ async function forgetPassword(
     const resetToken = await user.createResetToken();
 
     console.log(resetToken);
-    const url: string = `https://briefly-client.netlify.app/resetPassword/${resetToken}`;
+    const url: string = `https://briefly-26p0.onrender.com/resetPassword/${resetToken}`;
     const sendMail = new EmailSender();
     await sendMail.sendPasswordResetEmail(user, resetToken, url);
     await user.save({ validateBeforeSave: false });
     res.status(200).json({
+      status: 'success',
       message: 'Your password reset token has been sent. Check your mailbox',
     });
   } catch (err: any) {
@@ -180,7 +181,12 @@ async function resetPassword(
 
     res
       .status(200)
-      .json({ message: 'A new password has been set', token, user });
+      .json({
+        status: 'success',
+        message: 'A new password has been set',
+        token,
+        user,
+      });
   } catch (err: any) {
     new AppError(err, 500);
   }
