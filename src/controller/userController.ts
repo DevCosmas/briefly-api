@@ -16,10 +16,7 @@ async function signUp(
   next: NextFunction
 ): Promise<void> {
   try {
-    console.log('we start here');
     const body = (req as any).body;
-
-    if (req.file) body.photo = req.file.filename;
     const newUser = await userModel.create(body);
     if (!newUser) {
       return next(new AppError('Fill in the correct details please', 400));
@@ -28,7 +25,6 @@ async function signUp(
     const token = await jwtToken(newUser._id);
     const sendMail = new EmailSender();
     await sendMail.sendWelcomeEmail(newUser);
-    res.cookie('jwt', token, { httpOnly: true });
     res.status(201).json({
       status: 'success',
       message: 'Sign up complete',
@@ -48,12 +44,12 @@ async function login(
 ): Promise<void> {
   try {
     const loginDetails = req.body;
-    // Confirm if the user exists
+
     const isValidUser = await userModel.findOne({ email: loginDetails.email });
     if (!isValidUser) {
       return next(new AppError('This user is not found. Kindly sign up', 404));
     }
-    // Compare user password
+
     const isValidPassword = await isValidUser.isValidPassword(
       loginDetails.password,
       isValidUser.password
@@ -62,7 +58,7 @@ async function login(
     if (!isValidPassword) {
       return next(new AppError('Invalid password or email', 401));
     }
-    // Generate a token for use
+
     const token = await jwtToken(isValidUser._id);
 
     res.status(200).json({
@@ -100,25 +96,6 @@ async function updateProfile(
       }
     } else {
       return next(new AppError('User does not exist. Kindly sign up', 404));
-    }
-  } catch (err: any) {
-    next(new AppError(err, 500));
-  }
-}
-
-async function deleteAcct(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  const sendResponse = new SendResponse(res);
-
-  try {
-    const user: any = await userModel.findById((req as any).user._id);
-    user.active = false;
-    await user.save();
-    if (user) {
-      sendResponse.sendJson(user, 'Account deactivated successfully', 203);
     }
   } catch (err: any) {
     next(new AppError(err, 500));
@@ -163,7 +140,7 @@ async function resetPassword(
   next: NextFunction
 ): Promise<void> {
   try {
-    const resetToken = req.params.Token;
+    const resetToken = req.body.token;
     const user = await userModel
       .findOne({
         resetPasswordToken: resetToken,
@@ -179,50 +156,15 @@ async function resetPassword(
     await user.save();
     const token = await jwtToken(user._id);
 
-    res
-      .status(200)
-      .json({
-        status: 'success',
-        message: 'A new password has been set',
-        token,
-        user,
-      });
-  } catch (err: any) {
-    new AppError(err, 500);
-  }
-}
-
-async function reactivateAcct(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  const sendResponse = new SendResponse(res);
-
-  try {
-    const user: any = await userModel
-      .findOne({ email: req.body.email })
-      .select('-password');
-    if (!user) next(new AppError('This user does not exist', 404));
-    user.active = true;
-    await user.save();
-    sendResponse.sendJson(
+    res.status(200).json({
+      status: 'success',
+      message: 'A new password has been set',
+      token,
       user,
-      `Welcome back ${user.username}. Your account has been re-activated`,
-      200
-    );
+    });
   } catch (err: any) {
     new AppError(err, 500);
   }
 }
 
-export {
-  signUp,
-  updateProfile,
-  deleteAcct,
-  login,
-  logout,
-  forgetPassword,
-  resetPassword,
-  reactivateAcct,
-};
+export { signUp, updateProfile, login, logout, forgetPassword, resetPassword };

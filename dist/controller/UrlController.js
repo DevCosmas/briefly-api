@@ -77,14 +77,23 @@ function createShortUrl(req, res, next) {
             const body = req.body;
             if (!body.originalUrl)
                 next(new errorhandler_1.default('Your Original Url Pls!', 400));
-            body.shortUrl = shortid_1.default.generate();
-            body.userId = req.user;
-            const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
-            body.newUrl = url;
-            const newDoc = yield shortenedUrl_1.UrlModel.create(body);
-            res
-                .status(201)
-                .json({ status: 'success', message: 'New Link Created', newDoc });
+            const existingLink = yield shortenedUrl_1.UrlModel.findOne({
+                userId: req.user._id,
+                originalUrl: body.originalUrl,
+            });
+            if (existingLink) {
+                return next(new errorhandler_1.default('This link has been shortened', 400));
+            }
+            else {
+                body.shortUrl = shortid_1.default.generate();
+                body.userId = req.user;
+                const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
+                body.newUrl = url;
+                const newDoc = yield shortenedUrl_1.UrlModel.create(body);
+                res
+                    .status(201)
+                    .json({ status: 'success', message: 'New Link Created', newDoc });
+            }
         }
         catch (err) {
             next(new errorhandler_1.default(err, 500));

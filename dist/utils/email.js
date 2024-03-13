@@ -65,7 +65,9 @@ class EmailSender {
             const timeRemainingInMinutes = Math.max(0, Math.ceil((user.resetTimeExp - Date.now()) / 60000));
             const username = user.username;
             const emailAddress = user.email;
-            const message = `You have requested for a password reset Token. This token will be expiring in the next ${timeRemainingInMinutes} minutes \n Click the link provided to reset your password`;
+            const message = `You have requested for a password reset Token.\n
+    Your reset password token is ${resetToken}.
+    This token will be expiring in the next ${timeRemainingInMinutes} minutes`;
             const heading = 'Password Reset';
             const templatePath = path_1.default.join(__dirname, '../view/resetEmail.ejs');
             const template = yield ejs_1.default.renderFile(templatePath, {
