@@ -82,9 +82,9 @@ createdAt: {type: Date, default: Date.now(),
 **METHOD**: POST
 
 **BODY**:`{
-    "username":"devuuuuuuuucossmas",
+    "username":"devcosmas",
     "password":"pass123",
-    "email":"examplhhghghgjhse@gmail.com"
+    "email":"buikem0112@gmail.com"
 }`
 
 **RESPONSE**:`{
@@ -92,8 +92,8 @@ createdAt: {type: Date, default: Date.now(),
     "message": "Sign up complete",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZjJmZGZjZDQ5ZWNkNDk3NzFjYWYxZSIsImlhdCI6MTcxMDQyMzU0OSwiZXhwIjoxNzEwNDI3MTQ5fQ.BMRYWP51VYfZ2BJM6NWuq1sgPWev5WQ8QgOpoIF2ndI",
     "user": {
-        "email": "exp@gmail.com",
-        "username": "human",
+        "email": "buikem0112@gmail.com",
+        "username": "devcosmas",
         "password": "$2b$12$BFNKHkusoWzVcbuzM2waz.3KTpeApYWZGiszoieWt4XZRR/LMMvuK",
         "active": true,
         "_id": "65f2fdfcd49ecd49771caf1e",
@@ -114,7 +114,7 @@ createdAt: {type: Date, default: Date.now(),
 **METHOD**: POST
 
 **BODY**:`{
- "password":"don",
+ "password":"pass123",
  "email":"buikem0112@gmail.com"
 }`
 
@@ -125,7 +125,6 @@ createdAt: {type: Date, default: Date.now(),
     "user": {
         "_id": "65cb79415dd7f1c988ae73b6",
         "email": "buikem0112@gmail.com",
-        "photo": "user-1708276370612.png",
         "username": "newUserName00",
         "password": "$2b$12$gKzXwCFhNjY2QciZuL4nGO9j7tCUm5wsj1ssGAJzFnjjqvZRIReie",
         "active": true,
@@ -133,19 +132,6 @@ createdAt: {type: Date, default: Date.now(),
     }
 }`
 
-<!--
-<li>Login <li>
-<li>Update me (user) <li>
-<li>Forget Password token<li>
-<li>Reset Password <li>
-<li>Logout<li>
-<li>Create new Url <li>
-<li>Redirect Url <li>
-<li>Update Url <li>
-<li>Delete Url<li>
-<li>Find all user's Url <li> -->
-
-**Note**: To test in postman. Click on "run in postman" at the top right corner of the website.
 
 ### Update me (user)
 
@@ -168,8 +154,8 @@ createdAt: {type: Date, default: Date.now(),
     "message": "Your profile is updated",
     "size": 1,
     "data": {
-        "_id": "65f2fdfcd49ecd49771caf1e",
-        "email": "exp@gmail.com",
+        "_id": "65cb79415dd7f1c988ae73b6",
+        "email": "buikem0112@gmail.com",
         "username": "new human",
         "active": true,
         "__v": 0
