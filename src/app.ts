@@ -14,3 +14,5 @@ const app = createServer();
 app.listen(PORT, () => {
   console.log('Server is up and paying attention');
 });
+
+export default app;
