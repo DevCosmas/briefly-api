@@ -74,7 +74,7 @@ async function createShortUrl(req: Request, res: Response, next: NextFunction) {
       return next(new AppError('This link has been shortened', 400));
     } else {
       body.shortUrl = shortId.generate();
-      body.userId = (req as any).user;
+      body.userId = (req as any).user._id;
       const url: string = `${(req as any).protocol}://${(req as any).get(
         'host'
       )}/${body.shortUrl}`;

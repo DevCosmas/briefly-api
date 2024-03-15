@@ -9,7 +9,7 @@ For taking business decision, with the simple tracking feature embedded in brief
 
 **API LIVE BASEURL**: https://briefly-api.onrender.com
 
-**CLIENT SIDE LIVE LINK**:
+**CLIENT SIDE LIVE LINK**:https://briefly-26p0.onrender.com/
 
 # TECH STACK
 
