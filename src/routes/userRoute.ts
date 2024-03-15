@@ -18,6 +18,6 @@ userRouter.post('/login', login);
 userRouter.patch('/Update_me', isAuthenticated, updateProfile);
 userRouter.patch('/reset_Password', resetPassword);
 userRouter.post('/forget_Password', forgetPassword);
-userRouter.post('/ logout', isAuthenticated, logout);
+userRouter.post('/logout', isAuthenticated, logout);
 
 export default userRouter;

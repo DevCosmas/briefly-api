@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUrl = exports.findOneOfMyUrl = exports.findAllMyUrl = exports.updateUrl = exports.RedirectUrl = exports.createShortUrl = void 0;
+exports.deleteUrl = exports.findAllMyUrl = exports.updateUrl = exports.RedirectUrl = exports.createShortUrl = void 0;
 const shortid_1 = __importDefault(require("shortid"));
 const shortenedUrl_1 = require("../model/shortenedUrl");
 const errorhandler_1 = __importDefault(require("../utils/errorhandler"));
@@ -148,28 +148,4 @@ function findAllMyUrl(req, res, next) {
     });
 }
 exports.findAllMyUrl = findAllMyUrl;
-function findOneOfMyUrl(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            if (!req.user.active === true)
-                return next(new errorhandler_1.default('Login or Sign up again', 401));
-            const myUrl = yield shortenedUrl_1.UrlModel.findOne({
-                userId: req.user._id,
-                shortUrl: req.params.shortId,
-            });
-            if (!myUrl || myUrl.length === 0)
-                return next(new errorhandler_1.default('No Url link was found!', 404));
-            res.status(200).json({
-                status: 'success',
-                message: 'Here is Your Url link',
-                size: myUrl.length,
-                myUrl,
-            });
-        }
-        catch (err) {
-            next(new errorhandler_1.default(err.message, 500));
-        }
-    });
-}
-exports.findOneOfMyUrl = findOneOfMyUrl;
 //# sourceMappingURL=UrlController.js.map

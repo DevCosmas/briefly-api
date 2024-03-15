@@ -136,34 +136,4 @@ async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function findOneOfMyUrl(req: Request, res: Response, next: NextFunction) {
-  try {
-    if (!(req as any).user.active === true)
-      return next(new AppError('Login or Sign up again', 401));
-
-    const myUrl: any = await UrlModel.findOne({
-      userId: (req as any).user._id,
-      shortUrl: req.params.shortId,
-    });
-    if (!myUrl || myUrl.length === 0)
-      return next(new AppError('No Url link was found!', 404));
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Here is Your Url link',
-      size: myUrl.length,
-      myUrl,
-    });
-  } catch (err: any) {
-    next(new AppError(err.message, 500));
-  }
-}
-
-export {
-  createShortUrl,
-  RedirectUrl,
-  updateUrl,
-  findAllMyUrl,
-  findOneOfMyUrl,
-  deleteUrl,
-};
+export { createShortUrl, RedirectUrl, updateUrl, findAllMyUrl, deleteUrl };

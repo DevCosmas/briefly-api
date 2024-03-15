@@ -140,7 +140,7 @@ async function resetPassword(
   next: NextFunction
 ): Promise<void> {
   try {
-    const resetToken = req.body.token;
+    const resetToken = req.body.token || req.params.Token;
     const user = await userModel
       .findOne({
         resetPasswordToken: resetToken,

@@ -5,7 +5,6 @@ import {
   RedirectUrl,
   updateUrl,
   findAllMyUrl,
-  findOneOfMyUrl,
   deleteUrl,
 } from '../controller/UrlController';
 import { isAuthenticated } from '../controller/authConroller';
@@ -28,7 +27,6 @@ urlRouter.use((req, res, next) => {
 
 urlRouter.post('/createUrl', isAuthenticated, createShortUrl);
 urlRouter.get('/findAll', isAuthenticated, findAllMyUrl);
-urlRouter.get('/myUrls/:shortId', findOneOfMyUrl);
 urlRouter.patch('/updateUrl/:shortId', isAuthenticated, updateUrl);
 urlRouter.delete('/deleteUrl/:id', isAuthenticated, deleteUrl);
 urlRouter.get('/:shortId', RedirectUrl);

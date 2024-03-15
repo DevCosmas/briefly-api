@@ -1,40 +1,36 @@
-## Introduction
+# BRIEFLY API (Altschool capstone project)
 
-Welcome to the Blogging API documentation. This API allows you to create, read, update, and delete blog posts, manage user accounts, and perform various operations related to blogging. Whether you are building a personal blog, a content management system, or any application that requires blogging functionality, this API provides the tools you need to manage your content effectively.
+## INTRODUCTION
 
-## Table of Contents
+Briefly is an amazing web app that allows you to shorten long links or urls. It is super easy to use and user friendly. Briefly avails you with diferent feature, such as keeping tracking of the perfomance of your web Link.
+For taking business decision, with the simple tracking feature embedded in briefly, You are sure to make business analysis and take bussine action.
 
-# 1\. Authentication
+# LINK
 
-# 2\. Endpoints
+**API LIVE BASEURL**: https://briefly-api.onrender.com
 
-## 2.1. User Management
+**CLIENT SIDE LIVE LINK**:
 
-### 2.1a [Sign Up]
+# TECH STACK
 
-### 2.1b [Login]
+MERN
 
-### 2.1c [updateMe]
+# DATABASES
 
-### 2.1d [Forget Password]
+MongoDb
 
-### 2.1e [Reset Password]
+# HOW TO RUN PROJECT
 
-## 2.2. Shorten Url Management
+- Clone The repo and cd into your base folder
 
-### 2.2a [create a short URL]
+  `git clone https://github.com/DevCosmas/scissors_api.git`
 
-### 2.2b [Find All url by User id]
+  `cd <base folder>`
 
-### 2.2c [Update URL name]
+- Run "npm install" to install all the dependencies
 
-### 2.2d [Delete URL ]
+  `npm install`
 
-## Authentication
+- npm start on the terminal to start the application
 
-Authentication is required to access most endpoints of this API. You need to sign up or login to be assigned a token . This token will stored to in the request.cookies.  
-**NOTE**: Token is set to expire after 1 hour
-
-## Endpoints
-
-**Note**: To test in postman. Click on "run in postman" at the top right corner of the website.
+  `npm start`

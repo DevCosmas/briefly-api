@@ -132,7 +132,7 @@ exports.forgetPassword = forgetPassword;
 function resetPassword(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const resetToken = req.body.token;
+            const resetToken = req.body.token || req.params.Token;
             const user = yield user_1.userModel
                 .findOne({
                 resetPasswordToken: resetToken,

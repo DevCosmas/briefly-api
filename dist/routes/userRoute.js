@@ -12,6 +12,6 @@ userRouter.post('/login', userController_1.login);
 userRouter.patch('/Update_me', authConroller_1.isAuthenticated, userController_1.updateProfile);
 userRouter.patch('/reset_Password', userController_1.resetPassword);
 userRouter.post('/forget_Password', userController_1.forgetPassword);
-userRouter.post('/ logout', authConroller_1.isAuthenticated, userController_1.logout);
+userRouter.post('/logout', authConroller_1.isAuthenticated, userController_1.logout);
 exports.default = userRouter;
 //# sourceMappingURL=userRoute.js.map
