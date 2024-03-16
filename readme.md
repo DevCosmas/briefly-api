@@ -11,6 +11,8 @@ For taking business decision, with the simple tracking feature embedded in brief
 
 **CLIENT SIDE LIVE LINK**:https://briefly-26p0.onrender.com/
 
+**FULL DOCUMENTATION**: https://documenter.getpostman.com/view/28599121/2sA2xmWBiU
+
 # TECH STACK
 
 MERN
