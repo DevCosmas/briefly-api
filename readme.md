@@ -3,7 +3,7 @@
 ## INTRODUCTION
 
 Briefly is an amazing web app that allows you to shorten long links or urls. It is super easy to use and user friendly. Briefly avails you with diferent feature, such as keeping tracking of the perfomance of your web Link.
-For taking business decision, with the simple tracking feature embedded in briefly, You are sure to make business analysis and take bussine action.
+For taking business decision, with the simple tracking feature embedded in briefly, You are sure to make business analysis and take business action.
 
 # LINK
 
