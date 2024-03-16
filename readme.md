@@ -23,7 +23,7 @@ MongoDb
 
 - Clone The repo and cd into your base folder
 
-  `git clone https://github.com/DevCosmas/scissors_api.git`
+  `git clone https://github.com/DevCosmas/briefly-api.git`
 
   `cd <base folder>`
 
