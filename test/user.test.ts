@@ -126,8 +126,7 @@ describe('url', () => {
       const token = loginResponse.body.token;
       console.log('TOKEN', token);
       const newUrl = {
-        originalUrl:
-          'https://chat.openai.com/c/9fd04bc5-9899-477e-b100-2fbf24f8b1ce',
+        originalUrl: 'https://github.com/DevCosmas',
       };
 
       const response = await supertest(app)
@@ -140,7 +139,8 @@ describe('url', () => {
 
     it('should return 401 Unauthorized if JWT token is missing', async () => {
       const newUrl = {
-        originalUrl: 'https://chat.openai.com/',
+        originalUrl:
+          'https://www.hostinger.com/tutorials/portfolio-website-examples',
       };
 
       const response = await supertest(app).post('/createUrl').send(newUrl);
