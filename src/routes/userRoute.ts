@@ -15,7 +15,7 @@ const userRouter = express.Router();
 
 userRouter.post('/register', signUp);
 userRouter.post('/login', login);
-userRouter.patch('/Update_me', isAuthenticated, updateProfile);
+userRouter.patch('/Update_me/:id', isAuthenticated, updateProfile);
 userRouter.patch('/reset_Password', resetPassword);
 userRouter.post('/forget_Password', forgetPassword);
 userRouter.post('/logout', isAuthenticated, logout);

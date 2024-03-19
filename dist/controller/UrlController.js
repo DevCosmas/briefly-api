@@ -86,7 +86,7 @@ function createShortUrl(req, res, next) {
             }
             else {
                 body.shortUrl = shortid_1.default.generate();
-                body.userId = req.user;
+                body.userId = req.user._id;
                 const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
                 body.newUrl = url;
                 const newDoc = yield shortenedUrl_1.UrlModel.create(body);

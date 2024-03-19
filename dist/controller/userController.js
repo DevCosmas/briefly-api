@@ -26,16 +26,17 @@ function signUp(req, res, next) {
             if (!newUser) {
                 return next(new errorhandler_1.default('Fill in the correct details please', 400));
             }
-            const token = yield (0, jwt_1.jwtToken)(newUser._id);
-            const sendMail = new email_1.default();
-            yield sendMail.sendWelcomeEmail(newUser);
-            res.status(201).json({
-                status: 'success',
-                message: 'Sign up complete',
-                token,
-                user: newUser,
-            });
-            console.log('we end here');
+            else {
+                const token = yield (0, jwt_1.jwtToken)(newUser._id);
+                const sendMail = new email_1.default();
+                yield sendMail.sendWelcomeEmail(newUser);
+                res.status(201).json({
+                    status: 'success',
+                    message: 'Sign up complete',
+                    token,
+                    user: newUser,
+                });
+            }
         }
         catch (err) {
             next(new errorhandler_1.default(err, 500));
@@ -78,8 +79,9 @@ function updateProfile(req, res, next) {
                 updatesDetails.photo = req.file
                     ? req.file.filename
                     : req.user.photo;
+                const userId = req.params.id;
                 const updatedUser = yield user_1.userModel
-                    .findByIdAndUpdate(req.user._id, updatesDetails, {
+                    .findByIdAndUpdate(req.user._id || userId, updatesDetails, {
                     new: true,
                     runValidators: true,
                 })

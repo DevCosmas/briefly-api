@@ -9,7 +9,7 @@ const userController_1 = require("./../controller/userController");
 const userRouter = express_1.default.Router();
 userRouter.post('/register', userController_1.signUp);
 userRouter.post('/login', userController_1.login);
-userRouter.patch('/Update_me', authConroller_1.isAuthenticated, userController_1.updateProfile);
+userRouter.patch('/Update_me/:id', authConroller_1.isAuthenticated, userController_1.updateProfile);
 userRouter.patch('/reset_Password', userController_1.resetPassword);
 userRouter.post('/forget_Password', userController_1.forgetPassword);
 userRouter.post('/logout', authConroller_1.isAuthenticated, userController_1.logout);

@@ -20,18 +20,17 @@ async function signUp(
     const newUser = await userModel.create(body);
     if (!newUser) {
       return next(new AppError('Fill in the correct details please', 400));
+    } else {
+      const token = await jwtToken(newUser._id);
+      const sendMail = new EmailSender();
+      await sendMail.sendWelcomeEmail(newUser);
+      res.status(201).json({
+        status: 'success',
+        message: 'Sign up complete',
+        token,
+        user: newUser,
+      });
     }
-
-    const token = await jwtToken(newUser._id);
-    const sendMail = new EmailSender();
-    await sendMail.sendWelcomeEmail(newUser);
-    res.status(201).json({
-      status: 'success',
-      message: 'Sign up complete',
-      token,
-      user: newUser,
-    });
-    console.log('we end here');
   } catch (err: any) {
     next(new AppError(err, 500));
   }
@@ -85,8 +84,9 @@ async function updateProfile(
       updatesDetails.photo = req.file
         ? req.file.filename
         : (req as any).user.photo;
+      const userId = req.params.id;
       const updatedUser = await userModel
-        .findByIdAndUpdate((req as any).user._id, updatesDetails, {
+        .findByIdAndUpdate((req as any).user._id || userId, updatesDetails, {
           new: true,
           runValidators: true,
         })

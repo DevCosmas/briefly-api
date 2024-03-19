@@ -10,7 +10,7 @@ Click on the documentstion link and read in lenght on how you can set up briefly
 
 # LINKS
 
-**API LIVE BASEURL**: https://briefly-api.onrender.com
+**API LIVE BASEURL**:
 **CLIENT SIDE LIVE LINK**:https://briefly-26p0.onrender.com/
 **READ FULL DOCUMENTATION**:https://documenter.getpostman.com/view/28599121/2sA2xmWBiU
 

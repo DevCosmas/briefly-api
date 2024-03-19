@@ -12,4 +12,5 @@ const app = (0, server_1.default)();
 app.listen(PORT, () => {
     console.log('Server is up and paying attention');
 });
+exports.default = app;
 //# sourceMappingURL=app.js.map

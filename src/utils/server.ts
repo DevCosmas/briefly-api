@@ -18,7 +18,7 @@ import { mongoDbConnection } from '../config';
 function createServer() {
   // connection
   const app: Express = express();
-  mongoDbConnection();
+  // mongoDbConnection();
   console.log(process.env.NODE_ENV);
 
   app.set('trust proxy', 1);
