@@ -33,7 +33,7 @@ async function RedirectUrl(req: Request, res: Response, next: NextFunction) {
 
 async function updateUrl(req: Request, res: Response, next: NextFunction) {
   try {
-    if (!(req as any).user.active === true)
+    if (!(req as any).user.active)
       return next(new AppError('Login or Sign up again', 401));
     if (!req.body) return next(new AppError(`New name can't be blank`, 400));
     const findUrl: any = await UrlModel.findOne({
@@ -115,7 +115,7 @@ async function findAllMyUrl(req: Request, res: Response, next: NextFunction) {
   try {
     const userID = (req as any).user._id || req.query.id;
 
-    if (!(req as any).user.active === true)
+    if (!(req as any).user.active)
       return next(new AppError('Login or Sign up again', 401));
 
     const data = await UrlModel.find({ userId: userID }).sort({

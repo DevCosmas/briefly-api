@@ -79,7 +79,7 @@ async function updateProfile(
   const sendResponse = new SendResponse(res);
 
   try {
-    if ((req as any).user.active === true) {
+    if ((req as any).user.active) {
       const updatesDetails = req.body;
       updatesDetails.photo = req.file
         ? req.file.filename
@@ -119,8 +119,6 @@ async function forgetPassword(
       .select('-password');
     if (!user) return next(new AppError('This user does not exist', 404));
     const resetToken = await user.createResetToken();
-
-    console.log(resetToken);
     const url: string = `https://briefly-26p0.onrender.com/resetPassword/${resetToken}`;
     const sendMail = new EmailSender();
     await sendMail.sendPasswordResetEmail(user, resetToken, url);

@@ -3,7 +3,13 @@ import createServer from '../src/utils/server';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { userModel } from '../src/model/user';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  response,
+} from 'express';
 import { login } from '../src/controller/userController';
 
 let app: Express;
@@ -109,7 +115,7 @@ describe('user', () => {
 });
 
 describe('url', () => {
-  describe('create new url', () => {
+  describe('url', () => {
     it('should create a new short url', async () => {
       const userId = mongoose.Types.ObjectId;
       const user = {
@@ -135,6 +141,11 @@ describe('url', () => {
         .send(newUrl);
 
       expect(response.status).toBe(201);
+
+      it('should redirect url', async () => {
+        const res = await supertest(app).get(response.body.newUrl);
+        expect(res.status).toBe(200);
+      });
     });
 
     it('should return 401 Unauthorized if JWT token is missing', async () => {

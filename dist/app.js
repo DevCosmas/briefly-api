@@ -7,7 +7,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const server_1 = __importDefault(require("./utils/server"));
 const PORT = process.env.PORT || 3000;
-console.log(process.env.NODE_ENV);
 const app = (0, server_1.default)();
 app.listen(PORT, () => {
     console.log('Server is up and paying attention');

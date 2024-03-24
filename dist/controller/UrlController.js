@@ -44,7 +44,7 @@ exports.RedirectUrl = RedirectUrl;
 function updateUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            if (!req.user.active === true)
+            if (!req.user.active)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
             if (!req.body)
                 return next(new errorhandler_1.default(`New name can't be blank`, 400));
@@ -128,7 +128,7 @@ function findAllMyUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const userID = req.user._id || req.query.id;
-            if (!req.user.active === true)
+            if (!req.user.active)
                 return next(new errorhandler_1.default('Login or Sign up again', 401));
             const data = yield shortenedUrl_1.UrlModel.find({ userId: userID }).sort({
                 createdAt: -1,

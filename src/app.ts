@@ -7,8 +7,6 @@ import AppError from './utils/errorhandler';
 import createServer from './utils/server';
 
 const PORT: number = (process.env.PORT as any) || 3000;
-console.log(process.env.NODE_ENV);
-
 const app = createServer();
 
 app.listen(PORT, () => {

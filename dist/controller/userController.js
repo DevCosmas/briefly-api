@@ -74,7 +74,7 @@ function updateProfile(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const sendResponse = new sendResponse_1.default(res);
         try {
-            if (req.user.active === true) {
+            if (req.user.active) {
                 const updatesDetails = req.body;
                 updatesDetails.photo = req.file
                     ? req.file.filename
@@ -115,7 +115,6 @@ function forgetPassword(req, res, next) {
             if (!user)
                 return next(new errorhandler_1.default('This user does not exist', 404));
             const resetToken = yield user.createResetToken();
-            console.log(resetToken);
             const url = `https://briefly-26p0.onrender.com/resetPassword/${resetToken}`;
             const sendMail = new email_1.default();
             yield sendMail.sendPasswordResetEmail(user, resetToken, url);

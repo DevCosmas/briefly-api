@@ -15,11 +15,11 @@ const path_1 = __importDefault(require("path"));
 const cors_1 = __importDefault(require("cors"));
 // import helmet from 'helmet';
 const morgan_1 = __importDefault(require("morgan"));
+const config_1 = require("../config");
 function createServer() {
     // connection
     const app = (0, express_1.default)();
-    // mongoDbConnection();
-    console.log(process.env.NODE_ENV);
+    (0, config_1.mongoDbConnection)();
     app.set('trust proxy', 1);
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
