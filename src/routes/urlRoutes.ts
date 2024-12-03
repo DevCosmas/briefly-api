@@ -28,7 +28,7 @@ urlRouter.use((req, res, next) => {
 urlRouter.post('/createUrl', isAuthenticated, createShortUrl);
 urlRouter.get('/findAll', isAuthenticated, findAllMyUrl);
 urlRouter.patch('/updateUrl/:shortId', isAuthenticated, updateUrl);
-urlRouter.delete('/deleteUrl/:id', isAuthenticated, deleteUrl);
+urlRouter.delete('/deleteUrl/:shortId', isAuthenticated, deleteUrl);
 urlRouter.get('/:shortId', RedirectUrl);
 
 export default urlRouter;

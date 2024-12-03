@@ -54,7 +54,7 @@ function login(req, res, next) {
             }
             const isValidPassword = yield isValidUser.isValidPassword(loginDetails.password, isValidUser.password);
             if (!isValidPassword) {
-                return next(new errorhandler_1.default('Invalid password or email', 401));
+                return next(new errorhandler_1.default('Invalid password or email', 400));
             }
             const token = yield (0, jwt_1.jwtToken)(isValidUser._id);
             res.status(200).json({

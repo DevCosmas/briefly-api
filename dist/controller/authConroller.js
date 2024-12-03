@@ -28,7 +28,7 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             token = req.cookies.jwt;
         }
         if (!token) {
-            return next(new errorhandler_1.default('Unauthorized', 401));
+            return next(new errorhandler_1.default('Unauthorized Access', 401));
         }
         const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY);
         const currentTime = Math.floor(Date.now() / 1000);

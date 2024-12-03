@@ -18,7 +18,7 @@ const isAuthenticated = async (
       token = req.cookies.jwt;
     }
     if (!token) {
-      return next(new AppError('Unauthorized', 401));
+      return next(new AppError('Unauthorized Access', 401));
     }
     const decodedToken = jwt.verify(
       token,
@@ -46,7 +46,5 @@ const isAuthenticated = async (
     next(new AppError(err.message, 500));
   }
 };
-
-
 
 export { isAuthenticated };

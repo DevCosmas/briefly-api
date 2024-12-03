@@ -55,7 +55,7 @@ async function login(
     );
 
     if (!isValidPassword) {
-      return next(new AppError('Invalid password or email', 401));
+      return next(new AppError('Invalid password or email', 400));
     }
 
     const token = await jwtToken(isValidUser._id);

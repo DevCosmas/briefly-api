@@ -23,7 +23,7 @@ urlRouter.use((req, res, next) => {
 urlRouter.post('/createUrl', authConroller_1.isAuthenticated, UrlController_1.createShortUrl);
 urlRouter.get('/findAll', authConroller_1.isAuthenticated, UrlController_1.findAllMyUrl);
 urlRouter.patch('/updateUrl/:shortId', authConroller_1.isAuthenticated, UrlController_1.updateUrl);
-urlRouter.delete('/deleteUrl/:id', authConroller_1.isAuthenticated, UrlController_1.deleteUrl);
+urlRouter.delete('/deleteUrl/:shortId', authConroller_1.isAuthenticated, UrlController_1.deleteUrl);
 urlRouter.get('/:shortId', UrlController_1.RedirectUrl);
 exports.default = urlRouter;
 //# sourceMappingURL=urlRoutes.js.map

@@ -9,8 +9,10 @@ import util from 'util';
 async function RedirectUrl(req: Request, res: Response, next: NextFunction) {
   try {
     const shortId: string = req.params.shortId;
+    console.log(shortId, req.params);
     const shortenedUrlDoc = await UrlModel.findOne({ shortUrl: shortId });
-    console.log(shortenedUrlDoc);
+    // console.log(shortenedUrlDoc);
+
     if (!shortenedUrlDoc) {
       return next(new AppError('No Url was found', 404));
     }
@@ -33,8 +35,6 @@ async function RedirectUrl(req: Request, res: Response, next: NextFunction) {
 
 async function updateUrl(req: Request, res: Response, next: NextFunction) {
   try {
-    if (!(req as any).user.active)
-      return next(new AppError('Login or Sign up again', 401));
     if (!req.body) return next(new AppError(`New name can't be blank`, 400));
     const findUrl: any = await UrlModel.findOne({
       shortUrl: req.params.shortId,
@@ -49,7 +49,7 @@ async function updateUrl(req: Request, res: Response, next: NextFunction) {
     findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
     const newUrl: string = `${(req as any).protocol}://${(req as any).get(
       'host'
-    )}/${findUrl.shortUrl}`;
+    )}/api/url/${findUrl.shortUrl}`;
     findUrl.newUrl = newUrl;
     await findUrl.save();
     res.status(200).json({
@@ -66,6 +66,7 @@ async function createShortUrl(req: Request, res: Response, next: NextFunction) {
   try {
     const body = req.body;
     if (!body.originalUrl) next(new AppError('Your Original Url Pls!', 400));
+
     const existingLink = await UrlModel.findOne({
       userId: (req as any).user._id,
       originalUrl: body.originalUrl,
@@ -77,7 +78,7 @@ async function createShortUrl(req: Request, res: Response, next: NextFunction) {
       body.userId = (req as any).user._id;
       const url: string = `${(req as any).protocol}://${(req as any).get(
         'host'
-      )}/${body.shortUrl}`;
+      )}/api/url/${body.shortUrl}`;
       body.newUrl = url;
       const newDoc = await UrlModel.create(body);
       res
@@ -91,10 +92,8 @@ async function createShortUrl(req: Request, res: Response, next: NextFunction) {
 
 async function deleteUrl(req: Request, res: Response, next: NextFunction) {
   try {
-    if (!(req as any).user.active === true)
-      return next(new AppError('Login or Sign up again', 401));
     const findUrl: any = await UrlModel.findOne({
-      _id: req.params.id,
+      shortUrl: req.params.shortId,
     });
     if (!findUrl || findUrl === null)
       return next(new AppError('Url does not exist', 404));
@@ -102,7 +101,9 @@ async function deleteUrl(req: Request, res: Response, next: NextFunction) {
       return next(
         new AppError('You are not authorized to perform this action', 401)
       );
-    const deleteUrl = await UrlModel.deleteOne({ _id: req.params.id });
+    const deleteUrl = await UrlModel.deleteOne({
+      shortUrl: req.params.shortId,
+    });
     res
       .status(200)
       .json({ status: 'success', message: 'You have deleted this Url' });

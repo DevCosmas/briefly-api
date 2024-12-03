@@ -33,7 +33,7 @@ function createServer() {
     app.set('views', path_1.default.join(__dirname, 'views'));
     // routes
     app.use('/api/user', userRoute_1.default);
-    app.use('/', urlRoutes_1.default);
+    app.use('/api/url', urlRoutes_1.default);
     app.all('*', (req, res, next) => {
         next(new errorhandler_1.default('page not found', 404));
     });

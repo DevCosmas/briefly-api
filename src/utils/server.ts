@@ -38,7 +38,7 @@ function createServer() {
 
   // routes
   app.use('/api/user', userRouter);
-  app.use('/', urlRouter);
+  app.use('/api/url', urlRouter);
 
   app.all('*', (req: Request, res: Response, next: NextFunction) => {
     next(new AppError('page not found', 404));

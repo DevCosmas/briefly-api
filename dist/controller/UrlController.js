@@ -20,8 +20,9 @@ function RedirectUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const shortId = req.params.shortId;
+            console.log(shortId, req.params);
             const shortenedUrlDoc = yield shortenedUrl_1.UrlModel.findOne({ shortUrl: shortId });
-            console.log(shortenedUrlDoc);
+            // console.log(shortenedUrlDoc);
             if (!shortenedUrlDoc) {
                 return next(new errorhandler_1.default('No Url was found', 404));
             }
@@ -44,8 +45,6 @@ exports.RedirectUrl = RedirectUrl;
 function updateUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            if (!req.user.active)
-                return next(new errorhandler_1.default('Login or Sign up again', 401));
             if (!req.body)
                 return next(new errorhandler_1.default(`New name can't be blank`, 400));
             const findUrl = yield shortenedUrl_1.UrlModel.findOne({
@@ -56,7 +55,7 @@ function updateUrl(req, res, next) {
             if (findUrl.userId._id.toString() !== req.user._id.toString())
                 return next(new errorhandler_1.default('You are not authorized to perform this action', 401));
             findUrl.shortUrl = req.body ? req.body.shortUrl : findUrl.shortUrl;
-            const newUrl = `${req.protocol}://${req.get('host')}/${findUrl.shortUrl}`;
+            const newUrl = `${req.protocol}://${req.get('host')}/api/url/${findUrl.shortUrl}`;
             findUrl.newUrl = newUrl;
             yield findUrl.save();
             res.status(200).json({
@@ -87,7 +86,7 @@ function createShortUrl(req, res, next) {
             else {
                 body.shortUrl = shortid_1.default.generate();
                 body.userId = req.user._id;
-                const url = `${req.protocol}://${req.get('host')}/${body.shortUrl}`;
+                const url = `${req.protocol}://${req.get('host')}/api/url/${body.shortUrl}`;
                 body.newUrl = url;
                 const newDoc = yield shortenedUrl_1.UrlModel.create(body);
                 res
@@ -104,16 +103,16 @@ exports.createShortUrl = createShortUrl;
 function deleteUrl(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            if (!req.user.active === true)
-                return next(new errorhandler_1.default('Login or Sign up again', 401));
             const findUrl = yield shortenedUrl_1.UrlModel.findOne({
-                _id: req.params.id,
+                shortUrl: req.params.shortId,
             });
             if (!findUrl || findUrl === null)
                 return next(new errorhandler_1.default('Url does not exist', 404));
             if (findUrl.userId._id.toString() !== req.user._id.toString())
                 return next(new errorhandler_1.default('You are not authorized to perform this action', 401));
-            const deleteUrl = yield shortenedUrl_1.UrlModel.deleteOne({ _id: req.params.id });
+            const deleteUrl = yield shortenedUrl_1.UrlModel.deleteOne({
+                shortUrl: req.params.shortId,
+            });
             res
                 .status(200)
                 .json({ status: 'success', message: 'You have deleted this Url' });
